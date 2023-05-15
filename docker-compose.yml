@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+#  server:
+#    build: server/
+#    command: python ./server.py
+#    ports:
+#      - 8000:8000
+#
+#  client:
+#    build: client/
+#    command: python ./client.py
+#    network_mode: host
+#    depends_on:
+#      - server
+
+  django:
+    build: .
+    container_name: Django_volumes
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/docker-volumes/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - pgdb
+
+  pgdb:
+    image: postgres
+    environment:
+      - POSTGRES_DB = postgres
+      - POSTGRES_USER = postgres
+      - POSTGRES_PASSWORD = postgres
+    container_name: pgdb
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
+
+volumes:
+  pgdbdata: null
